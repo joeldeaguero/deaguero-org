@@ -1,0 +1,15 @@
+[Unit]
+Description=deaguero-org
+After=network.target
+
+[Service]
+ExecStart=/var/www/deaguero-org/index.js
+Restart=always
+User=nobody
+Group=nobody
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/var/www/deaguero-org
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+{
+  "name": "deaguero-org",
+  "version": "0.0.1",
+  "description": "deaguero.org source",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joeldeaguero/deaguero-org.git"
+  },
+  "keywords": [
+    "deaguero"
+  ],
+  "author": "Joel Deaguero <joel.deaguero@gmail.com> (http://deaguero.org/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joeldeaguero/deaguero-org/issues"
+  }
+}
