@@ -1,2 +1,2 @@
 # deaguero-org
-The source for deaguero.org
+This is the source code for my home website.  Enjoy!
