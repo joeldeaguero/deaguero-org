@@ -1,9 +1,11 @@
 #!/usr/bin/env node
-var http = require('http');
+var express = require('express');
+var app = express();
 
-var server = http.createServer(function(req, res) {
-  res.writeHead(200);
-  res.end('Under construction');
+app.get('/', function (req, res) {
+  res.send('Under construction!');
 });
 
-server.listen(80);
+app.listen(80, function () {
+  console.log('deaguero-org listening on port 80');
+});

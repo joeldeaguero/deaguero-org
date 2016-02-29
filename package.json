@@ -17,5 +17,8 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/joeldeaguero/deaguero-org/issues"
+  },
+  "dependencies": {
+    "express": "~4.13.4"
   }
 }
