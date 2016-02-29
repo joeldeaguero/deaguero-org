@@ -12,7 +12,7 @@ var ports = isProduction ? [80, 443] : [3442, 3443];
 var tlsFiles = ['./tls/key.pem', './tls/cert.pem'];
 var wantSSL;
 async.each(tlsFiles, function(filePath, callback) {
-	fs.access(filePath, fs.R_OK, (err) => {
+	fs.access(filePath, fs.R_OK, function (err) {
 		console.log('deaguero-org no access to %s', filePath);
 		callback(err);
 	});
