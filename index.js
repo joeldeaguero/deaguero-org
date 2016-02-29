@@ -10,18 +10,23 @@ console.log('deaguero-org %s isProduction=%d', timeStartup.toUTCString(), isProd
 
 var ports = isProduction ? [80, 443] : [3442, 3443];
 var tlsFiles = ['./tls/key.pem', './tls/cert.pem'];
-var wantSSL;
-async.each(tlsFiles, function(filePath, callback) {
-	fs.access(filePath, fs.R_OK, function (err) {
-		console.log('deaguero-org no access to %s', filePath);
-		callback(err);
-	});
-}, function(err) {
-	if(isProduction && err) {
-		return;
-	}
-	wantSSL = !err;
-});
+var wantSSL = true;
+try {
+	console.log('deaguero-org checking %s', tlsFiles[0]);
+	fs.accessSync(tlsFiles[0], fs.F_OK);
+} catch(e) {
+	wantSSL = false;
+}
+try {
+	console.log('deaguero-org checking %s', tlsFiles[1]);
+	fs.accessSync(tlsFiles[1], fs.F_OK);
+} catch(e) {
+	wantSSL = false;
+}
+
+if(isProduction && !wantSSL) {
+	return;
+}
 
 var app = express();
 var server;
