@@ -6,10 +6,16 @@ var https = require('https');
 
 var timeStartup = new Date();
 var isProduction = process.env.NODE_ENV === 'production';
+var ports = isProduction ? [80, 443] : [3442, 3443];
+var tlsFiles = [__dirname + '/tls/key.pem', __dirname + '/tls/cert.pem'];
+var path = __dirname + '/views/';
+
+var app = express();
+var router = express.Router();
+var server; // this might not get initialized in dev
+
 console.log('deaguero-org %s isProduction=%d', timeStartup.toUTCString(), isProduction);
 
-var ports = isProduction ? [80, 443] : [3442, 3443];
-var tlsFiles = ['./tls/key.pem', './tls/cert.pem'];
 var wantSSL = true;
 try {
 	console.log('deaguero-org checking %s', tlsFiles[0]);
@@ -28,8 +34,29 @@ if(isProduction && !wantSSL) {
 	return;
 }
 
-var app = express();
-var server;
+router.use('/', function (req, res, next) {
+	var timeRequest = new Date();
+	var method = req.method;
+	var url = req.url;
+	var remoteAddress = req.ip;
+	console.log('deaguero-org %s processing %s to %s for %s', timeRequest.toUTCString(), method, url, remoteAddress);
+	next();
+});
+
+router.get('/', function (req, res) {
+  res.sendFile(path + "index.html");
+});
+
+//router.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
+router.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+router.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+router.use('/static', express.static(__dirname + '/public')); // redirect static images
+
+app.use("/", router);
+
+app.use("*", function(req,res){
+  res.sendFile(path + "404.html");
+});
 
 if(wantSSL) {
   server = https.createServer(
@@ -48,8 +75,3 @@ if(wantSSL) {
 app.listen(ports[0], function () {
   console.log('deaguero-org listening for HTTP on port %d', ports[0]);
 });
-
-app.use('/', function (req, res) {
-  res.send('Under construction!!');
-});
-
