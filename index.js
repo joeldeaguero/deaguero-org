@@ -43,8 +43,8 @@ if(isProduction && !wantGoogleLogin) {
 
 // configure passport 
 passport.use(new GoogleStrategy({
-	clientID: fs.readFileSync(oauthFilesGoogle[0], 'ascii'),
-	clientSecret: fs.readFileSync(oauthFilesGoogle[1], 'ascii'),
+	clientID: fs.readFileSync(oauthFilesGoogle[0], 'ascii').trim(),
+	clientSecret: fs.readFileSync(oauthFilesGoogle[1], 'ascii').trim(),
 	callbackURL: 'https://www.deaguero.org/auth/google/callback'
 },
 function(accessToken, refreshToken, profile, cb) {
