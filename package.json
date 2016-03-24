@@ -19,10 +19,14 @@
     "url": "https://github.com/joeldeaguero/deaguero-org/issues"
   },
   "dependencies": {
-    "express": "~4.13.4",
-    "async": "~1.5.2",
+    "body-parser": "^1.15.0",
     "bootstrap": "~3.3.6",
-	"passport": "~0.3.2",
-	"passport-google-oauth20": "~1.0.0"
+    "cookie-parser": "^1.4.1",
+    "express": "~4.13.4",
+    "express-session": "^1.13.0",
+    "jquery": "~2.2.2",
+    "passport": "~0.3.2",
+    "passport-google-oauth20": "~1.0.0",
+    "swig": "^1.4.2"
   }
 }

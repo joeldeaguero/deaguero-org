@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Deaguero.org</title>
 <link rel="stylesheet" href="/css/bootstrap.min.css">
+<script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <style>
   body {
@@ -21,12 +22,18 @@
 <body>
 <div>
 	<div>
-		<nav class="navbar navbar-inverse" role="navigation">
+		<nav class="navbar navbar-default">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="/">Deaguero.org</a>
 			</div>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/auth/google">Login</a></li>
+				{% if user.id %}
+				<li><p class="navbar-text">Logged in as {{user.displayName}}</p></li>
+				<li><a href="/logout">Logout&nbsp;</a></li>
+				{% else %}
+				<li><p class="navbar-text">Welcome, {{user.displayName}}</p></li>
+				<li><a href="/auth/google">Login&nbsp;</a></li>
+				{% endif %}
 			</ul>
 		</nav>
 	</div>
@@ -73,7 +80,7 @@
 	  </div>
 	</div>
 	<div>
-		<nav class="navbar navbar-inverse" role="navigation">
+		<nav class="navbar navbar-default">
 			<div class="navbar-footer">
 				<p class="navbar-text">
 					Designed and built by Joel and Kassia Deaguero, with special thanks to CentOS, GitHub, JavaScript, Node.js and Bootstrap.

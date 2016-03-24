@@ -3,7 +3,7 @@ Description=deaguero-org
 After=network.target
 
 [Service]
-ExecStart=/var/www/deaguero-org/index.js
+ExecStart=/var/www/deaguero-org/server.js
 Restart=always
 User=nobody
 Group=nobody
