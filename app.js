@@ -28,7 +28,7 @@ app.secrets = {
 	ssl: {
 		keyFile:			__dirname + '/tls/key.pem',
 		key:				null,
-		certFile:			__dirname + '/tls/cert.pem',
+		certFile:			__dirname + '/tls/fullchain.pem',
 		cert:				null
 	},
 	login: {
