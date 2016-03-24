@@ -9,34 +9,28 @@
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <style>
-  body {
-    padding: 10px;
-  }
-  @media (max-width: 980px) {
-    body {
-      padding: 0;
-    }
-  }
 </style>
 </head>
 <body>
 <div>
-	<div>
-		<nav class="navbar navbar-default">
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="/">Deaguero.org</a>
 			</div>
-			<ul class="nav navbar-nav navbar-right">
-				{% if user.id %}
-				<li><p class="navbar-text">Logged in as {{user.displayName}}</p></li>
-				<li><a href="/logout">Logout&nbsp;</a></li>
-				{% else %}
-				<li><p class="navbar-text">Welcome, {{user.displayName}}</p></li>
-				<li><a href="/auth/google">Login&nbsp;</a></li>
-				{% endif %}
-			</ul>
-		</nav>
-	</div>
+			<div>
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						{% if user.id %}
+						<p class="navbar-text">Logged in as&nbsp;{{user.displayName}}&nbsp;<a href="/logout">Logout</a>&nbsp;</p>
+						{% else %}
+						<p class="navbar-text">Welcome,&nbsp;{{user.displayName}}&nbsp;<a href="/auth/google">Login</a>&nbsp;</p>
+						{% endif %}
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 	<div class="panel panel-primary">
 	  <div class="panel-heading">
 		<h3 class="panel-title">Joel Deaguero</h3>
@@ -44,10 +38,10 @@
 	  <div class="panel-body">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-4" style="max-width: 200px">
+				<div class="col-lg-4 col-xs-6" style="max-width: 300px">
 					<img src="static/Joel_Profile.jpg" alt="Picture of Joel" class="img-responsive"></img>
 				</div>
-				<div class="col-md-8">
+				<div class="col-lg-8 col-xs-12 col-sm-6">
 					<p>
 						Joel has been a software developer for over 20 years.
 						<br/><br/>
@@ -67,10 +61,10 @@
 	  <div class="panel-body">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-4" style="max-width: 200px">
+				<div class="col-lg-4 col-xs-6" style="max-width: 300px">
 					<img src="static/Kassia_Profile.jpg" alt="Picture of Kassia" class="img-responsive"></img>
 				</div>
-				<div class="col-md-8">
+				<div class="col-lg-8 col-xs-12 col-sm-6">
 					<p>
 						Kassia is a software quality assurance analyst who loves breaking things.  Especially if Joel wrote them.
 					</p>
@@ -79,18 +73,18 @@
 		</div>
 	  </div>
 	</div>
-	<div>
-		<nav class="navbar navbar-default">
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
 			<div class="navbar-footer">
 				<p class="navbar-text">
-					Designed and built by Joel and Kassia Deaguero, with special thanks to CentOS, GitHub, JavaScript, Node.js and Bootstrap.
-				</p>
-				<p class="navbar-text">
-					<span><a href="https://github.com/joeldeaguero/deaguero-org">GitHub</a></span>
+					Coded with love by Joel and Kassia Deaguero.  Thanks to CentOS, GitHub, JavaScript, Node.js and Bootstrap!
 				</p>
 			</div>
-		</nav>
-	</div>
+			<div>
+				<p class="navbar-text navbar-right"><a href="https://github.com/joeldeaguero/deaguero-org">GitHub</a>&nbsp;</p>
+			</div>
+		</div>
+	</nav>
 </div>
 </body>
 </html>
