@@ -153,7 +153,7 @@ route.init = function(app) {
 	router.use('/static', express.static(__dirname + '/public'));
 	router.use(favicon(__dirname + '/public/favicon.ico'));
 	
-	app.get('/', function (req, res) {
+	router.get('/', function (req, res) {
 		var currentUser = IsAuth(app, req) ? req.user : guest;
 		res.render(app.secrets.view.folder + 'index.html', { user: currentUser });
 	});
