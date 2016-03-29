@@ -4,19 +4,25 @@
  */	
 var express = require('express'),
 	session = require('express-session'),
+	favicon = require('serve-favicon'),
 	cookieParser = require('cookie-parser'),
 	bodyParser = require('body-parser'),
 	passport = require('passport'),
-	GoogleStrategy = require('passport-google-oauth20').Strategy;
+	GoogleStrategy = require('passport-google-oauth20').Strategy,
+	mongoose = require('mongoose');
 
 var route = exports = module.exports = {};
 
 var router = express.Router()
 
 var guest = {
+	_id : 0
 	id : 0,
-	displayName : 'Guest'
+	displayName : 'Guest',
+	email : 'guest@deaguero.org'
 };
+
+var User = null;
 
 function IsAuth(app, req) {
 	if(!app.locals.login.google) {
@@ -26,7 +32,13 @@ function IsAuth(app, req) {
 	return req.isAuthenticated();
 }
 
+function UpdateDatabaseUserFromGoogleUser(dbuser, user) {
+	dbuser.displayName = user.displayName;
+	dbuser.email = user.emails[0].value;
+}
+
 route.init = function(app) {
+	var _favicon = favicon(__dirname + '/public/favicon.ico');
 	app.use(cookieParser());
 	app.use(bodyParser.urlencoded({ extended: true }));
 	
@@ -36,6 +48,19 @@ route.init = function(app) {
 			resave: false,
 			saveUninitialized: false
 		}));
+	}
+	
+	if(app.locals.mongodb.enabled) {
+		var options = {
+			user: 'deaguero-org',
+			pass: app.secrets.mongodb.password
+		};
+		mongoose.connect('mongodb://localhost/deaguero-org', options);
+		User = mongoose.model('User', {
+			id : Number,
+			displayName : String,
+			email : String
+		});
 	}
 	
 	router.use('/', function (req, res, next) {
@@ -60,11 +85,37 @@ route.init = function(app) {
 		}));
 
 		passport.serializeUser(function(user, cb) {
-			return cb(null, user);
+			User.findOne({ 'id' : user.id }, function(err, dbuser) {
+				if(err) {
+					console.log("deaguero.org: %s", err);
+					return cb(err, guest._id);
+				}
+				var createMode = "updated";
+				if(!dbuser) {
+					createMode = "created";
+					dbuser = new User({ id : user.id });
+				}
+				UpdateDatabaseUserFromGoogleUser(dbuser, user);
+				dbuser.save(function(err) {
+					if(err) {
+						console.log("deaguero.org: %s", err);
+						return cb(err, guest._id);
+					} else {
+						console.log("deaguero.org: %s user %s (%d)", createMode, dbuser.email, dbuser.id);
+						return cb(null, dbuser._id);
+					}
+				});
+			});
 		});
 
-		passport.deserializeUser(function(user, cb) {
-			return cb(null, user);
+		passport.deserializeUser(function(dbuser_id, cb) {
+			User.findById(dbuser_id, function(err, user) {
+				if(err) {
+					console.log("deaguero.org: %s", err);
+					return cb(err, guest);
+				}
+				return cb(null, user);
+			});
 		});	
 		
 		// add passport routes to the app
@@ -100,6 +151,7 @@ route.init = function(app) {
 	router.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 	router.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 	router.use('/static', express.static(__dirname + '/public'));
+	router.use(favicon(__dirname + '/public/favicon.ico'));
 	
 	app.get('/', function (req, res) {
 		var currentUser = IsAuth(app, req) ? req.user : guest;

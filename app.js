@@ -40,6 +40,10 @@ app.secrets = {
 	session: {
 		secretFile:			__dirname + '/session/secret.txt',
 		secret:				null
+	},
+	mongodb : {
+		passwordFile:		__dirname + '/mongodb/password.txt',
+		password:			null
 	}
 };
 
@@ -63,6 +67,9 @@ app.locals = {
 	},
 	session: {
 		enabled: false
+	},
+	mongodb : {
+		enabled: false
 	}
 };
 
@@ -83,6 +90,7 @@ app.init = function() {
 	appRead(app.secrets.login.googleIdFile,		function(res) { app.secrets.login.googleId = res;		});
 	appRead(app.secrets.login.googleSecretFile,	function(res) { app.secrets.login.googleSecret = res;	})
 	appRead(app.secrets.session.secretFile,		function(res) { app.secrets.session.secret = res;		});
+	appRead(app.secrets.mongodb.passwordFile,	function(res) { app.secrets.mongodb.password = res;		});
 	
 	app.locals.ssl.enabled = IsString(app.secrets.ssl.key) && 
 		IsString(app.secrets.ssl.cert);
@@ -91,4 +99,6 @@ app.init = function() {
 		IsString(app.secrets.login.googleSecret);
 		
 	app.locals.session.enabled = IsString(app.secrets.session.secret);
+	
+	app.locals.mongodb.enabled = IsString(app.secrets.mongodb.password);
 }
