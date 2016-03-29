@@ -12,4 +12,3 @@ mkdir mongodb
 cp /etc/mongodb/live/www.deaguero.org/password.txt mongodb/password.txt
 chown -R nobody:nobody .
 systemctl start deaguero-org
-

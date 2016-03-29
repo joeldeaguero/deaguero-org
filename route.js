@@ -23,9 +23,9 @@ function IsAuth(app, req) {
 	return req.isAuthenticated();
 }
 
-function UpdateDatabaseUserFromGoogleProfile(dbuser, user) {
-	dbuser.displayName = user.displayName;
-	dbuser.email = user.emails[0].value;
+function UpdateDatabaseUserFromGoogleProfile(dbuser, googleProfile) {
+	dbuser.displayName = googleProfile.displayName;
+	dbuser.email = googleProfile.emails[0].value;
 	return dbuser;
 }
 
@@ -80,10 +80,12 @@ route.init = function(app) {
 		}));
 
 		passport.serializeUser(function(user, cb) {
+			console.log("s: %s", JSON.stringify(user));
 			return user._id;
 		});
 
 		passport.deserializeUser(function(dbuser_id, cb) {
+			console.log("d: %s", JSON.stringify(dbuser_id));
 			model.User.findById(dbuser_id, function(err, user) {
 				if(err) {
 					console.log("deaguero.org: %s", err);
@@ -113,7 +115,7 @@ route.init = function(app) {
 			session: true
 		}),
 		function(req, res) {
-			res.redirect('/');
+			res.redirect('https://www.deaguero.org/#');
 		});
 
 		app.get('/logout', function(req, res) {

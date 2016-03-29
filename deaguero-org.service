@@ -3,6 +3,8 @@ Description=deaguero-org
 After=network.target
 
 [Service]
+#ExecStart=/usr/local/bin/node-debug --web-host 0.0.0.0 /var/www/deaguero-org/server.js
+#ExecStart=/usr/local/bin/node --prof /var/www/deaguero-org/server.js
 ExecStart=/var/www/deaguero-org/server.js
 Restart=always
 User=nobody
