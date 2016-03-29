@@ -134,7 +134,7 @@ route.init = function(app) {
 	
 	router.get('/', function (req, res) {
 		var currentUser = IsAuth(app, req) ? req.user : model.guest;
-		res.render(app.secrets.view.folder + 'index.html', { user: currentUser });
+		res.render(app.secrets.view.folder + 'index.ect', { user: currentUser });
 	});
 
 	// add router to the app

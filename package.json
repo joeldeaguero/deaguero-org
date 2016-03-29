@@ -23,13 +23,13 @@
     "bootstrap": "~3.3.6",
     "cookie-parser": "^1.4.1",
     "cookie-session": "^2.0.0-alpha.1",
+    "ect": "^0.5.9",
     "express": "~4.13.4",
     "jquery": "~2.2.2",
     "mongodb": "^2.1.11",
     "mongoose": "^4.4.10",
     "passport": "~0.3.2",
     "passport-google-oauth20": "~1.0.0",
-    "serve-favicon": "^2.3.0",
-    "swig": "^1.4.2"
+    "serve-favicon": "^2.3.0"
   }
 }

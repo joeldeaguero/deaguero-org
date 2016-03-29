@@ -22,11 +22,11 @@
 			<div>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
-						{% if user.id %}
-						<p class="navbar-text">Logged in as&nbsp;{{user.displayName}}&nbsp;<a href="/logout">Logout</a>&nbsp;</p>
-						{% else %}
-						<p class="navbar-text">Welcome,&nbsp;{{user.displayName}}&nbsp;<a href="/auth/google">Login</a>&nbsp;</p>
-						{% endif %}
+						<% if @user.id : %>
+						<p class="navbar-text">Logged in as&nbsp;<%- @user.displayName %>&nbsp;<a href="/logout">Logout</a>&nbsp;</p>
+						<% else : %>
+						<p class="navbar-text">Welcome,&nbsp;<%- @user.displayName %>&nbsp;<a href="/auth/google">Login</a>&nbsp;</p>
+						<% end %>
 					</li>
 				</ul>
 			</div>

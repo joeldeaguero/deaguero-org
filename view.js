@@ -2,15 +2,14 @@
 
 /** @module view
  */	
-var swig = require('swig');
+var ect = require('ect');
 
 var view = exports = module.exports = {};
 
 view.init = function(app) {
-	app.engine('html', swig.renderFile);
-	app.set('view engine', 'html');
+	var ectRenderer = ect({ watch: true, root: app.secrets.view.folder, ext : '.ect' });
+	app.engine('ect', ectRenderer.render);
+	app.set('view engine', 'ect');
 	app.set('views', app.secrets.view.folder);
-	app.set('view cache', app.secrets.view.expressCache);
-	swig.setDefaults({ cache: (app.secrets.view.swigCache ? 'memory' : false) });
+	app.set('view cache', false); // use ect cache instead
 };
-

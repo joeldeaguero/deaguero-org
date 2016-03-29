@@ -14,16 +14,12 @@ function IsString(obj) {
 var _isProduction = process.env.NODE_ENV === 'production';
 var _platform = process.platform;
 var _isWindows = _platform == 'win32';
-var _expressCache = false; // in prod, set exactly one
-var _swigCache = true;     // of the caches to true
 
 /** config not available to templates
  */	
 app.secrets = {
 	view : {
 		folder: 			__dirname + '/views/',
-		expressCache:		_expressCache,
-		swigCache:			(!_expressCache && _swigCache)
 	},
 	ssl: {
 		keyFile:			__dirname + '/tls/key.pem',
