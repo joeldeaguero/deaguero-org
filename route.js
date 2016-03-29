@@ -81,7 +81,7 @@ route.init = function(app) {
 
 		passport.serializeUser(function(user, cb) {
 			console.log("s: %s", JSON.stringify(user));
-			return user._id;
+			return cb(null, user._id);
 		});
 
 		passport.deserializeUser(function(dbuser_id, cb) {
@@ -99,7 +99,7 @@ route.init = function(app) {
 		app.use(passport.initialize());
 		app.use(passport.session());
 		
-		app.get('/auth/google', passport.authenticate('google', {
+		router.get('/auth/google', passport.authenticate('google', {
 			scope: [ // https://developers.google.com/+/web/api/rest/oauth#authorization-scopes
 				'profile',
 				'email'
@@ -109,7 +109,7 @@ route.init = function(app) {
 			res.redirect('/'); // should not be called; the user should be redirected to google
 		});
 
-		app.get('/auth/google/callback', passport.authenticate('google', {
+		router.get('/auth/google/callback', passport.authenticate('google', {
 			successRedirect: '/',
 			failureRedirect: '/',
 			session: true
@@ -118,7 +118,7 @@ route.init = function(app) {
 			res.redirect('https://www.deaguero.org/#');
 		});
 
-		app.get('/logout', function(req, res) {
+		router.get('/logout', function(req, res) {
 			req.logout();
 			res.redirect('/');
 		});
@@ -130,7 +130,7 @@ route.init = function(app) {
 	router.use('/static', express.static(__dirname + '/public'));
 	
 	var _favicon = favicon(__dirname + '/public/favicon.ico');
-	router.use(favicon(__dirname + '/public/favicon.ico'));
+	app.use(favicon(__dirname + '/public/favicon.ico'));
 	
 	router.get('/', function (req, res) {
 		var currentUser = IsAuth(app, req) ? req.user : model.guest;
