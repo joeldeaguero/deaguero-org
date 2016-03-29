@@ -35,6 +35,7 @@ function IsAuth(app, req) {
 function UpdateDatabaseUserFromGoogleUser(dbuser, user) {
 	dbuser.displayName = user.displayName;
 	dbuser.email = user.emails[0].value;
+	return dbuser;
 }
 
 route.init = function(app) {
@@ -63,13 +64,13 @@ route.init = function(app) {
 		});
 	}
 	
-	router.use('/', function (req, res, next) {
+	/*router.use('/', function (req, res, next) {
 		var auth = IsAuth(app, req);
 		var currentUser = auth ? req.user : guest;
 		console.log('deaguero-org: %s %s %s %d %d %s', 
 			req.ip, req.method, req.protocol, auth, currentUser.id, req.url);
 		next();
-	});
+	});*/
 	
 	if(app.locals.login.google) {
 		// configure passport 
@@ -95,14 +96,16 @@ route.init = function(app) {
 					createMode = "created";
 					dbuser = new User({ id : user.id });
 				}
-				UpdateDatabaseUserFromGoogleUser(dbuser, user);
-				dbuser.save(function(err) {
+				UpdateDatabaseUserFromGoogleUser(dbuser, user).save(function(err) {
 					if(err) {
 						console.log("deaguero.org: %s", err);
+						dbuser = null;
 						return cb(err, guest._id);
 					} else {
 						console.log("deaguero.org: %s user %s (%d)", createMode, dbuser.email, dbuser.id);
-						return cb(null, dbuser._id);
+						var id = dbuser._id;
+						dbuser = null;
+						return cb(null, id);
 					}
 				});
 			});
