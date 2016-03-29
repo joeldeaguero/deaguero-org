@@ -3,9 +3,9 @@
 /** @module route
  */	
 var express = require('express'),
-	session = require('express-session'),
 	favicon = require('serve-favicon'),
 	cookieParser = require('cookie-parser'),
+	cookieSession = require('cookie-session'),
 	bodyParser = require('body-parser'),
 	passport = require('passport'),
 	GoogleStrategy = require('passport-google-oauth20').Strategy,
@@ -43,11 +43,11 @@ route.init = function(app) {
 	app.use(bodyParser.urlencoded({ extended: true }));
 	
 	if(app.locals.session.enabled) {
-		app.use(session({
+		app.use(cookieSession({
+			name: 'session',
 			secret: app.secrets.session.secret,
-			resave: false,
-			saveUninitialized: false
-		}));
+			keys: ['key1', 'key2']
+		}))
 	}
 	
 	if(app.locals.mongodb.enabled) {
