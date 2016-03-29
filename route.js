@@ -80,12 +80,10 @@ route.init = function(app) {
 		}));
 
 		passport.serializeUser(function(user, cb) {
-			console.log("s: %s", JSON.stringify(user));
 			return cb(null, user._id);
 		});
 
 		passport.deserializeUser(function(dbuser_id, cb) {
-			console.log("d: %s", JSON.stringify(dbuser_id));
 			model.User.findById(dbuser_id, function(err, user) {
 				if(err) {
 					console.log("deaguero.org: %s", err);
