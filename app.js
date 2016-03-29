@@ -3,6 +3,7 @@
 /** @module app
  */	
 var fs = require('fs'),
+	OS = require('os'),
 	express = require('express');
 
 var app = exports = module.exports = express();
@@ -67,6 +68,11 @@ app.locals = {
 	},
 	mongodb : {
 		enabled: false
+	},
+	os : {
+		cpu: {
+			cores: OS.cpus().length
+		}
 	}
 };
 
