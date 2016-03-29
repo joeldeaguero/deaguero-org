@@ -8,10 +8,12 @@ var https = require('https'),
 	app = require('./app'),
 	view = require('./view'),
 	route = require('./route'),
+	model = require('./model'),
 	server = null;
 	
 app.init();
 view.init(app);
+model.init(app);
 route.init(app);
 
 if(app.locals.ssl.enabled) {

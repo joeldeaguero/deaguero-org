@@ -42,6 +42,7 @@ app.secrets = {
 		secret:				null
 	},
 	mongodb : {
+		username:			'deaguero-org',
 		passwordFile:		__dirname + '/mongodb/password.txt',
 		password:			null
 	}

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /** @module route
  */	
@@ -9,20 +9,11 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	passport = require('passport'),
 	GoogleStrategy = require('passport-google-oauth20').Strategy,
-	mongoose = require('mongoose');
+	model = require('./model');
 
 var route = exports = module.exports = {};
 
-var router = express.Router()
-
-var guest = {
-	_id : 0,
-	id : 0,
-	displayName : 'Guest',
-	email : 'guest@deaguero.org'
-};
-
-var User = null;
+var router = express.Router();
 
 function IsAuth(app, req) {
 	if(!app.locals.login.google) {
@@ -32,14 +23,13 @@ function IsAuth(app, req) {
 	return req.isAuthenticated();
 }
 
-function UpdateDatabaseUserFromGoogleUser(dbuser, user) {
+function UpdateDatabaseUserFromGoogleProfile(dbuser, user) {
 	dbuser.displayName = user.displayName;
 	dbuser.email = user.emails[0].value;
 	return dbuser;
 }
 
 route.init = function(app) {
-	var _favicon = favicon(__dirname + '/public/favicon.ico');
 	app.use(cookieParser());
 	app.use(bodyParser.urlencoded({ extended: true }));
 	
@@ -51,22 +41,9 @@ route.init = function(app) {
 		}))
 	}
 	
-	if(app.locals.mongodb.enabled) {
-		var options = {
-			user: 'deaguero-org',
-			pass: app.secrets.mongodb.password
-		};
-		mongoose.connect('mongodb://localhost/deaguero-org', options);
-		User = mongoose.model('User', {
-			id : Number,
-			displayName : String,
-			email : String
-		});
-	}
-	
 	/*router.use('/', function (req, res, next) {
 		var auth = IsAuth(app, req);
-		var currentUser = auth ? req.user : guest;
+		var currentUser = auth ? req.user : model.guest;
 		console.log('deaguero-org: %s %s %s %d %d %s', 
 			req.ip, req.method, req.protocol, auth, currentUser.id, req.url);
 		next();
@@ -79,43 +56,38 @@ route.init = function(app) {
 			clientSecret: app.secrets.login.googleSecret,
 			callbackURL: (app.locals.ssl.enabled ? "https://" : "http://") + "www.deaguero.org/auth/google/callback"
 		},
-		function(accessToken, refreshToken, profile, cb) {
-			// https://developers.google.com/identity/protocols/OpenIDConnect#server-flow
-			// todo: create a users database, look up this user, return that instead
-			return cb(null, profile);
-		}));
-
-		passport.serializeUser(function(user, cb) {
-			User.findOne({ 'id' : user.id }, function(err, dbuser) {
+		function(accessToken, refreshToken, googleProfile, cb) {
+			model.User.findOne({ 'id' : googleProfile.id }, function(err, dbuser) {
 				if(err) {
 					console.log("deaguero.org: %s", err);
-					return cb(err, guest._id);
+					return cb(err, model.guest);
 				}
 				var createMode = "updated";
 				if(!dbuser) {
 					createMode = "created";
-					dbuser = new User({ id : user.id });
+					dbuser = new model.User({ id : googleProfile.id });
 				}
-				UpdateDatabaseUserFromGoogleUser(dbuser, user).save(function(err) {
+				UpdateDatabaseUserFromGoogleProfile(dbuser, googleProfile).save(function(err) {
 					if(err) {
 						console.log("deaguero.org: %s", err);
-						dbuser = null;
-						return cb(err, guest._id);
+						return cb(err, model.guest);
 					} else {
 						console.log("deaguero.org: %s user %s (%d)", createMode, dbuser.email, dbuser.id);
-						var id = dbuser._id;
-						dbuser = null;
-						return cb(null, id);
+						return cb(null, dbuser);
 					}
 				});
 			});
+		}));
+
+		passport.serializeUser(function(user, cb) {
+			return user._id;
 		});
 
 		passport.deserializeUser(function(dbuser_id, cb) {
-			User.findById(dbuser_id, function(err, user) {
+			model.User.findById(dbuser_id, function(err, user) {
 				if(err) {
 					console.log("deaguero.org: %s", err);
-					return cb(err, guest);
+					return cb(err, model.guest);
 				}
 				return cb(null, user);
 			});
@@ -154,10 +126,12 @@ route.init = function(app) {
 	router.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 	router.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 	router.use('/static', express.static(__dirname + '/public'));
+	
+	var _favicon = favicon(__dirname + '/public/favicon.ico');
 	router.use(favicon(__dirname + '/public/favicon.ico'));
 	
 	router.get('/', function (req, res) {
-		var currentUser = IsAuth(app, req) ? req.user : guest;
+		var currentUser = IsAuth(app, req) ? req.user : model.guest;
 		res.render(app.secrets.view.folder + 'index.html', { user: currentUser });
 	});
 
