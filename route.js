@@ -16,7 +16,7 @@ var route = exports = module.exports = {};
 var router = express.Router()
 
 var guest = {
-	_id : 0
+	_id : 0,
 	id : 0,
 	displayName : 'Guest',
 	email : 'guest@deaguero.org'
